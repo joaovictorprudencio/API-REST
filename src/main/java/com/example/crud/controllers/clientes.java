@@ -41,7 +41,7 @@ public ResponseEntity<Cliente> EsseCliente(@PathVariable Long id) {
         return ResponseEntity.notFound().build();
     }
 }
-   //bug na rota de atulização
+   
    @PutMapping("/cliente/{id}")
    public ResponseEntity<Cliente> AtualizarCliente(@PathVariable Long id, @RequestBody Cliente novoCliente) {
        Optional<Cliente> clienteOptional = clienteRepository.findById(id);
@@ -50,7 +50,6 @@ public ResponseEntity<Cliente> EsseCliente(@PathVariable Long id) {
            cliente.setNome(novoCliente.getNome());
            cliente.setEmail(novoCliente.getEmail());
            cliente.setCpf(novoCliente.getCpf());
-           // Atualizar outros campos conforme necessário
            Cliente clienteAtualizado = clienteRepository.save(cliente);
            return ResponseEntity.ok(clienteAtualizado);
        } else {
