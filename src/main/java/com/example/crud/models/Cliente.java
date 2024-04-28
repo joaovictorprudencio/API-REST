@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+
 @Entity
 public class Cliente {
   
@@ -20,6 +21,11 @@ public class Cliente {
  private String email;
 
 
+
+    public Cliente(Long id,String nome) {
+        this.id = id;
+        this.nome = nome;
+    }
 
 
     public Long getId() {

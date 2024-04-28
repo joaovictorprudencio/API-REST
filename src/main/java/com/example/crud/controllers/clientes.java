@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.crud.models.Cliente;
 import com.example.crud.repositorio.ClienteRepository;
+import com.example.crud.service.ClienteService;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,35 +26,40 @@ public class clientes {
    @Autowired
     private ClienteRepository clienteRepository;
 
+    @Autowired
+    private ClienteService clienteService;
+
 @PostMapping("/cliente")
 public ResponseEntity <Cliente> SalvarCliente(@RequestBody Cliente cliente){  
-Cliente novoCliente = clienteRepository.save(cliente);
+Cliente novoCliente = clienteService.SalvarCliente(cliente);
 return ResponseEntity.status(HttpStatus.CREATED).body(novoCliente);
-
 }
 
 @GetMapping("/cliente/{id}")
 public ResponseEntity<Cliente> EsseCliente(@PathVariable Long id) {
-    Cliente cliente =  clienteRepository.findById(id).orElse(null);
-    if (cliente != null) {
-        return ResponseEntity.ok(cliente);
-    } else {
-        return ResponseEntity.notFound().build();
-    }
+       ResponseEntity<Cliente> response;
+       Optional<Cliente> clienteOptional = clienteService.BuscarPorId(id);
+       if(clienteOptional.isPresent()){
+        response = new ResponseEntity<>(clienteOptional.get(), HttpStatus.OK);
+       } else{
+        response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+       }
+       return response;
 }
    
    @PutMapping("/cliente/{id}")
-   public ResponseEntity<Cliente> AtualizarCliente(@PathVariable Long id, @RequestBody Cliente novoCliente) {
+   public ResponseEntity<Optional<Cliente>> AtualizarCl(@PathVariable Long id, @RequestBody Cliente novoCliente) {
        Optional<Cliente> clienteOptional = clienteRepository.findById(id);
        if (clienteOptional.isPresent()) {
-           Cliente cliente = clienteOptional.get();
-           cliente.setNome(novoCliente.getNome());
-           cliente.setEmail(novoCliente.getEmail());
-           cliente.setCpf(novoCliente.getCpf());
-           Cliente clienteAtualizado = clienteRepository.save(cliente);
-           return ResponseEntity.ok(clienteAtualizado);
+
+           Optional<Cliente> cliente = clienteService.AtualizarCliente(id, novoCliente);
+
+           return ResponseEntity.ok(cliente);
+
        } else {
+
            return ResponseEntity.notFound().build();
+
        }
    
      
@@ -61,8 +67,8 @@ public ResponseEntity<Cliente> EsseCliente(@PathVariable Long id) {
 
 
 @DeleteMapping("/cliente/{id}")
-public ResponseEntity<Void> DeletarCliente(@PathVariable Long id ){
-       clienteRepository.deleteById(id);
+public ResponseEntity<Void> Delet(@PathVariable Long id ){
+       clienteService.DeletarCliente(id);
        return ResponseEntity.notFound().build();
     }
 }
