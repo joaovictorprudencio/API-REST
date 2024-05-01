@@ -61,6 +61,12 @@ public class Cliente {
     }
 
 
+    public Object thenReturn(Cliente pessoa) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'thenReturn'");
+    }
+
+
 
 
 

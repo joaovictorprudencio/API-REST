@@ -4,9 +4,11 @@ package com.example.crud.Serviços;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
+
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,39 +48,39 @@ public class ClienteServiceTest {
 
      @Test
      void testBuscarCliente(){
-     Optional<Cliente> cliente = new Cliente(2L, "victor");
-    Long id = Long.valueOf(2);
-     assertNotNull(id);
-     when(clienteRepository.findById(2l)).thenReturn(cliente);
+       //criando objeto local
+    Cliente cliente = new Cliente((long) 2,"joao");
+      //simulando jpa
+    when(clienteRepository.findById((long) 2)).thenReturn(java.util.Optional.of(cliente));
+     //passando o t6ipo de Optional Para cliente
+    Optional<Cliente> clienteOptional = clienteService.BuscarPorId((long) 2);
+      // fazendo testes e comparações
+
+           
+        Cliente cliente2 = clienteOptional.get();
+       // fazendo testes e comparações
+    assertNotNull(cliente2);
+   assertEquals("joao", cliente2.getNome());
+}
+
+@Test
+void TestAtualizarCliente(){
+    Cliente cliente = new Cliente((long) 1, "joao");
+   Cliente clienteAtualizado = new Cliente((long) 1, "joãovictor");
+
+  when(clienteRepository.findById((long) 1)).thenReturn(Optional.of(cliente));
+  when(clienteRepository.save(any(Cliente.class))).thenReturn(clienteAtualizado);
 
 
+  Optional<Cliente> clienteOptional = clienteService.AtualizarCliente((long) 1 ,  clienteAtualizado );
 
-
-
-
-     }
+  Cliente clienteAtual = clienteOptional.get();
   
+  assertEquals("joãovictor", clienteAtual.getNome());
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  
+}
 
 
 

@@ -38,7 +38,7 @@ public class ClienteService {
     }
     
     public Optional<Cliente> AtualizarCliente(Long id, Cliente clienteAtualizado){
-      Optional<Cliente> ClienteOpcional = clienteRepository.findById(id);
+      Optional<Cliente> ClienteOpcional = BuscarPorId(id) ;
       if(ClienteOpcional.isPresent()){
            Cliente novoCliente =  ClienteOpcional.get();
            novoCliente.setNome(clienteAtualizado.getNome());
