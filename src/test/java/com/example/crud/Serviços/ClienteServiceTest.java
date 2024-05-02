@@ -4,7 +4,10 @@ package com.example.crud.Serviços;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
@@ -12,6 +15,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -20,11 +24,15 @@ import com.example.crud.repositorio.ClienteRepository;
 import com.example.crud.service.ClienteService;
 
 public class ClienteServiceTest {
-    @Mock
+
+     @Mock
+    private ClienteRepository clienteRepository;
+
+
+    @InjectMocks
     private ClienteService clienteService;
 
-    @Mock
-    private ClienteRepository clienteRepository;
+   
 
 
      @BeforeEach
@@ -51,7 +59,7 @@ public class ClienteServiceTest {
        //criando objeto local
     Cliente cliente = new Cliente((long) 2,"joao");
       //simulando jpa
-    when(clienteRepository.findById((long) 2)).thenReturn(java.util.Optional.of(cliente));
+    when(clienteRepository.findById((long) 2)).thenReturn(Optional.of(cliente));
      //passando o t6ipo de Optional Para cliente
     Optional<Cliente> clienteOptional = clienteService.BuscarPorId((long) 2);
       // fazendo testes e comparações
@@ -80,7 +88,21 @@ void TestAtualizarCliente(){
 
 
   
+} 
+
+@Test
+void TestDeletarPorId(){
+  
+   doNothing().when(clienteRepository).deleteById((long) 1);
+
+   clienteService.DeletarCliente((long) 1);
+
+  verify(clienteRepository).deleteById((long)1);
+
+
 }
+
+
 
 
 
